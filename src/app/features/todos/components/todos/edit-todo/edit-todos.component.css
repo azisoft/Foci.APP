@@ -1,0 +1,15 @@
+.card-header h5 {
+  margin: 0;
+}
+
+.form-label {
+  font-weight: 600;
+}
+
+.btn + .btn {
+  margin-left: .5rem;
+}
+
+.form-control.is-invalid {
+  border-color: #dc3545;
+}

@@ -1,0 +1,83 @@
+<div class="container">
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Todos</h5>
+      <div>
+        <a class="btn btn-sm btn-primary" [routerLink]="['/todo']">Add Todo</a>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <form class="mb-3">
+          <div class="row g-5">
+          <div class="col-md-3">
+            <label class="form-label small">Title</label>
+            <input class="form-control" type="text" placeholder="Title..." name="title" [(ngModel)]="title" (ngModelChange)="onTitleInput($event)"/>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label small">Completed</label>
+            <div class="mt-1">
+              <button
+                type="button"
+                class="btn btn-sm btn-120"
+                [ngClass]="{
+                  'btn-outline-secondary': isCompleted === null,
+                  'btn-success': isCompleted === true,
+                  'btn-secondary': isCompleted === false
+                }"
+                (click)="onCompletedInput()"
+                aria-label="Filter by completed state"
+              >
+                {{ isCompleted === null ? 'All' : (isCompleted ? 'Completed' : 'Not Completed') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      @if (error) {
+      <div class="alert alert-danger">{{ error }}</div>
+      }
+
+      @if (loading) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-secondary" role="status" aria-hidden="true"></div>
+        <div class="small mt-2">Loading todos...</div>
+      </div>
+      } @else {
+
+      <div>
+        <table class="table table-hover table-striped align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Title</th>
+              <th>Description</th>
+              <th>Due Date</th>
+              <th>Completed</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(todo of todos; track todo.id) {
+            <tr>
+              <td>{{ todo.title }}</td>
+              <td>{{ todo.description || '-' }}</td>
+              <td>{{ todo.dueDate ? (todo.dueDate | date:'yyyy-MM-dd') : '-' }}</td>
+              <td (click)="toggleCompleted(todo)" class="clickable-cell"><span class="badge badge-pill" [class.bg-success]="todo.isCompleted" [class.bg-secondary]="!todo.isCompleted">{{ todo.isCompleted ? 'Yes' : 'No' }}</span></td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary me-2" [routerLink]="['/todo', todo.id]">Edit</a>
+                <button class="btn btn-sm btn-danger" (click)="confirmDelete(todo.id)">Delete</button>
+              </td>
+            </tr>
+            }
+            @if (todos.length === 0) {
+            <tr>
+              <td colspan="7" class="text-center text-muted">No todos found.</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      }
+    </div>
+  </div>
+</div>

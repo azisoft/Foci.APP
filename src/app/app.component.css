@@ -1,0 +1,10 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+.loading-center {
+  height: calc(100vh - 64px); /* adjust if your toolbar height differs */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
