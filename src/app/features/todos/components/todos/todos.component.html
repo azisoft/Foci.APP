@@ -2,14 +2,12 @@
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Todos</h5>
-      <div>
-        <a class="btn btn-sm btn-primary" [routerLink]="['/todo']">Add Todo</a>
-      </div>
+      <a class="btn btn-primary" [routerLink]="['/todo']">Add Todo</a>
     </div>
 
     <div class="card-body">
       <form class="mb-3">
-          <div class="row g-5">
+          <div class="row">
           <div class="col-md-3">
             <label class="form-label small">Title</label>
             <input class="form-control" type="text" placeholder="Title..." name="title" [(ngModel)]="title" (ngModelChange)="onTitleInput($event)"/>
