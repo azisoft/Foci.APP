@@ -52,6 +52,7 @@
               <th>Description</th>
               <th>Due Date</th>
               <th>Completed</th>
+              <th>Created On</th>
             </tr>
           </thead>
           <tbody>
@@ -61,6 +62,7 @@
               <td>{{ todo.description || '-' }}</td>
               <td>{{ todo.dueDate ? (todo.dueDate | date:'yyyy-MM-dd') : '-' }}</td>
               <td (click)="toggleCompleted(todo)" class="clickable-cell"><span class="badge badge-pill" [class.bg-success]="todo.isCompleted" [class.bg-secondary]="!todo.isCompleted">{{ todo.isCompleted ? 'Yes' : 'No' }}</span></td>
+              <td>{{ todo.createdAt ? (todo.createdAt | date:'yyyy-MM-dd') : '-' }}</td>
               <td class="text-end">
                 <a class="btn btn-sm btn-outline-secondary me-2" [routerLink]="['/todo', todo.id]">Edit</a>
                 <button class="btn btn-sm btn-danger" (click)="confirmDelete(todo.id)">Delete</button>

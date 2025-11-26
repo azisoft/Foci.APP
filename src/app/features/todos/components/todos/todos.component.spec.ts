@@ -1,10 +1,11 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { TodosComponent } from './todos.component';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
+import { TodosComponent } from './todos.component';
 import { TodoApiService } from '../../services/todos-api.service';
 import { Todo } from '../../models/todo.model';
+
 
 describe('TodosComponent', () => {
   let component: TodosComponent;
@@ -20,7 +21,7 @@ describe('TodosComponent', () => {
   };
 
   beforeEach(waitForAsync(() => {
-    todoApiSpy = jasmine.createSpyObj('TodoApiService', ['getTodos', 'deleteTodo']);
+    todoApiSpy = jasmine.createSpyObj('TodoApiService', ['getTodos', 'deleteTodo', 'updatePartialTodo']);
     // default getTodos returns single sample
     todoApiSpy.getTodos.and.returnValue(Promise.resolve([sampleTodo]));
 
@@ -30,18 +31,43 @@ describe('TodosComponent', () => {
         { provide: TodoApiService, useValue: todoApiSpy }
       ]
     }).compileComponents();
-  }));
 
-  beforeEach(async () => {
     fixture = TestBed.createComponent(TodosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-    // wait for async loadTodos to complete
-    await fixture.whenStable();
-  });
+  }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+    it('cycles completed filter through null -> true -> false -> null and calls onFilterChange', () => {
+    spyOn(component, 'onFilterChange');
+
+    // initial should be null (All)
+    expect(component.isCompleted).toBeNull();
+
+    component.onCompletedInput();
+    expect(component.isCompleted).toBeTrue();
+    expect(component.onFilterChange).toHaveBeenCalledTimes(1);
+
+    component.onCompletedInput();
+    expect(component.isCompleted).toBeFalse();
+
+    component.onCompletedInput();
+    expect(component.isCompleted).toBeNull();
+  });
+
+  it('toggleCompleted calls updatePartialTodo and reloads todos', async () => {
+    const todo: any = { id: 42, isCompleted: true };
+    todoApiSpy.updatePartialTodo.and.returnValue(Promise.resolve());
+
+    const loadSpy = spyOn<any>(component, 'loadTodos').and.returnValue(Promise.resolve());
+
+    await component.toggleCompleted(todo);
+
+    expect(todoApiSpy.updatePartialTodo).toHaveBeenCalledWith(42, { isCompleted: false });
+    expect(loadSpy).toHaveBeenCalled();
   });
 
   it('should load todos on init and map dueDate to date-only string', () => {
