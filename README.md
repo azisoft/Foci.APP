@@ -8,3 +8,7 @@ Please follow these steps to run the front-end
 
 For running the unit tests (there are unit tests added to todos.component and edit-todo.component)
 - run npm run test
+
+# Demo
+
+You can find a demo instance of the App at http://foci-demo.azisoft.ca/app
